@@ -14,6 +14,7 @@ const Footer = () => (
         <Link to="/books" className="transition hover:text-white">Browse Books</Link>
         <Link to="/login" className="transition hover:text-white">Login</Link>
         <Link to="/register" className="transition hover:text-white">Register</Link>
+        <Link to="/admin/login" className="text-slate-500 transition hover:text-slate-400">Admin</Link>
       </div>
     </div>
     <div className="border-t border-slate-800 bg-slate-900 px-4 py-6 text-center text-sm text-slate-500 sm:px-6">

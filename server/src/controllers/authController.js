@@ -1,4 +1,4 @@
-const { registerUser, loginUser } = require('../services/authService');
+const { registerUser, loginUser, adminLoginUser } = require('../services/authService');
 
 const register = async (req, res, next) => {
   try {
@@ -18,6 +18,15 @@ const login = async (req, res, next) => {
   }
 };
 
+const adminLogin = async (req, res, next) => {
+  try {
+    const { user, token } = await adminLoginUser(req.body);
+    res.json({ success: true, message: 'Admin login successful', data: { user, token } });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getMe = async (req, res, next) => {
   try {
     if (!req.user) {
@@ -29,4 +38,4 @@ const getMe = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, getMe };
+module.exports = { register, login, adminLogin, getMe };

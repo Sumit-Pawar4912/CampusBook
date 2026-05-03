@@ -5,14 +5,19 @@ import { useToast } from '../components/ToastProvider.jsx';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, loading, user } = useAuth();
+  const { login, adminLogin, loading, user } = useAuth();
   const { addToast } = useToast();
   const [form, setForm] = useState({ email: '', password: '' });
+  const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     }
   }, [user, navigate]);
 
@@ -22,9 +27,15 @@ const LoginPage = () => {
     e.preventDefault();
     setError('');
     try {
-      await login(form);
-      addToast('Logged in successfully', 'success');
-      navigate('/dashboard');
+      if (isAdmin) {
+        await adminLogin(form);
+        addToast('Admin logged in successfully', 'success');
+        navigate('/admin');
+      } else {
+        await login(form);
+        addToast('Logged in successfully', 'success');
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.message || 'Login failed');
       addToast(err.message || 'Login failed', 'error');
@@ -36,6 +47,30 @@ const LoginPage = () => {
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl">
         <h1 className="text-3xl font-semibold mb-4">CampusBook Login</h1>
         {error && <div className="rounded-lg bg-rose-100 text-rose-700 p-3 mb-4">{error}</div>}
+
+        <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="loginMode"
+              checked={!isAdmin}
+              onChange={() => setIsAdmin(false)}
+              className="h-4 w-4 text-sky-600"
+            />
+            User
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="loginMode"
+              checked={isAdmin}
+              onChange={() => setIsAdmin(true)}
+              className="h-4 w-4 text-sky-600"
+            />
+            Admin
+          </label>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block">
             <span className="text-sm font-medium">Email</span>
@@ -64,7 +99,7 @@ const LoginPage = () => {
             className="w-full rounded-2xl bg-sky-600 py-3 text-white hover:bg-sky-700"
             disabled={loading}
           >
-            {loading ? 'Signing in…' : 'Sign in'}
+            {loading ? 'Signing in…' : isAdmin ? 'Sign in as Admin' : 'Sign in'}
           </button>
         </form>
         <p className="mt-4 text-sm text-slate-600">

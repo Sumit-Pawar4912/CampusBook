@@ -43,4 +43,19 @@ const loginUser = async ({ email, password }) => {
   return { user: outputUser, token: generateToken(user._id) };
 };
 
-module.exports = { registerUser, loginUser, generateToken };
+const adminLoginUser = async ({ email, password }) => {
+  const user = await User.findOne({ email }).select('+password');
+  if (!user) throw { statusCode: 401, message: 'Invalid admin credentials' };
+
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword) throw { statusCode: 401, message: 'Invalid admin credentials' };
+
+  if (user.role !== 'admin') throw { statusCode: 403, message: 'Access denied. Admin privileges required.' };
+
+  const outputUser = user.toObject();
+  delete outputUser.password;
+
+  return { user: outputUser, token: generateToken(user._id) };
+};
+
+module.exports = { registerUser, loginUser, adminLoginUser, generateToken };

@@ -3,6 +3,7 @@ import ProtectedRoute from '../components/ProtectedRoute.jsx';
 import AdminRoute from '../components/AdminRoute.jsx';
 import LoginPage from '../pages/LoginPage.jsx';
 import RegisterPage from '../pages/RegisterPage.jsx';
+import AdminLoginPage from '../pages/AdminLoginPage.jsx';
 import HomePage from '../pages/HomePage.jsx';
 import DashboardPage from '../pages/DashboardPage.jsx';
 import BooksPage from '../pages/BooksPage.jsx';
@@ -17,6 +18,7 @@ const AppRoutes = () => (
     <Route path="/" element={<HomePage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
+    <Route path="/admin/login" element={<AdminLoginPage />} />
     <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
     <Route path="/books" element={<ProtectedRoute><BooksPage /></ProtectedRoute>} />
     <Route path="/books/:id" element={<ProtectedRoute><BookDetailsPage /></ProtectedRoute>} />

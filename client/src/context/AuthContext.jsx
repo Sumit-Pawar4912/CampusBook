@@ -36,6 +36,15 @@ export const AuthProvider = ({ children }) => {
     return response;
   };
 
+  const adminLogin = async credentials => {
+    setLoading(true);
+    const response = await authApi.adminLogin(credentials);
+    setUser(response.data.data.user);
+    setToken(response.data.data.token);
+    setLoading(false);
+    return response;
+  };
+
   const register = async credentials => {
     setLoading(true);
     const response = await authApi.register(credentials);
@@ -53,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, setUser }}>
+    <AuthContext.Provider value={{ user, token, loading, login, adminLogin, register, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );
